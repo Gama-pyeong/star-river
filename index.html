@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星河轨迹 · 中国科技创新数据图谱</title>
+<meta name="description" content="以数据可视化呈现中国航天、高铁、数字基建等领域的科技创新成就与发展历程。">
+<link rel="stylesheet" href="style.css">
+<!-- 引入 ECharts 库 -->
+<script src="./echarts.min.js"></script>
+</head>
+<body>
+
+<div id="loader">
+  <div class="lg">星 河 轨 迹</div>
+  <div class="lb"><i></i></div>
+  <div class="lt" id="loadTxt">INITIALIZING DATA GRAPH…</div>
+</div>
+
+<canvas id="stars"></canvas>
+<div class="nebula"><i></i><i></i><i></i></div>
+<div class="grid-mask"></div>
+<div class="noise"></div>
+<div id="prog"></div>
+
+<nav id="nav">
+  <div class="brand"><span class="dot"></span>星河轨迹 · STAR TRAJECTORY</div>
+  <div class="navlinks">
+    <a href=" " class="nav-a">总览</a >
+    <a href="#space" class="nav-a">航天</a >
+    <a href="#rail" class="nav-a">高铁</a >
+    <a href="#digital" class="nav-a">数字中国</a >
+    <a href="#frontier" class="nav-a">前沿刻度</a >
+    <a href="#outro" class="nav-a">结语</a >
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow rv">数字媒体技术大赛 · 数据可视化作品</div>
+      <h1 class="title rv">星河轨迹</h1>
+      <div class="title-en rv">A Data Atlas of China's Technological Innovation</div>
+      <div class="hero-sub rv">从地球轨道到 <b>5 万公里</b> 钢铁动脉，一条用数据描绘的中国创新轨迹</div>
+      <p class="hero-desc rv">
+        从 1970 年东方红一号划破长空，到 2025 年一年 <b>92 次</b>宇航发射、高铁营业里程突破 <b>5 万公里</b>、
+        5G 基站建成 <b>483.8 万个</b>——本图谱以权威数据为坐标，用可视化重现中国航天、高铁与数字基建的跃迁式发展历程，
+        让每一个刻度都成为可被看见的时代注脚。
+      </p >
+      <div class="hero-tags rv">
+        <span class="tag">航天发射</span>
+        <span class="tag">高速铁路</span>
+        <span class="tag">5G 与算力</span>
+        <span class="tag">研发投入</span>
+        <span class="tag">全球坐标</span>
+      </div>
+      <div class="hero-cta rv">
+        <button class="btn primary" data-go="#space">开始探索轨迹 →</button>
+        <button class="btn ghost" data-go="#overview">查看数据总览</button>
+      </div>
+    </div>
+    <div class="rv">
+      <div class="orbit">
+        <div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="ring"></div>
+        <div class="spin"><span class="sat"></span></div>
+        <div class="spin b"><span class="sat"></span></div>
+        <div class="spin c"><span class="sat"></span></div>
+        <div class="spin d"><span class="sat"></span></div>
+        <div class="core"></div>
+        <div class="label">LEO · GEO · LUNAR · DEEP SPACE</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">SCROLL<div class="bar"></div></div>
+</header>
+
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-no">00</div>
+      <div>
+        <div class="sec-en">Overview / China's Innovation Coordinates</div>
+        <h2 class="sec-title">中国创新 <em>坐标系</em></h2>
+      </div>
+    </div>
+    <div class="sec-line rv"></div>
+    <p class="lead rv">
+      2025 年是“十四五”收官之年。这一年，全社会研发经费投入达 <strong>3.93 万亿元</strong>，投入强度 <strong>2.8%</strong>，
+      首次超过 OECD 国家平均水平；世界知识产权组织《全球创新指数》中，中国首次进入全球前十。
+      下面六个数字，勾勒出这条轨迹的当下坐标。
+    </p >
+
+    <div class="kpi-grid" style="margin-top:34px">
+      <div class="card kpi rv">
+        <div class="k-ico">🚀</div>
+        <div><span class="k-num" data-count="92" data-dec="0">0</span><span class="k-unit">次</span></div>
+        <div class="k-lbl">2025 年宇航发射次数</div>
+        <div class="k-note">创历史新高 · 其中商业航天 50 次</div>
+      </div>
+      <div class="card kpi rv">
+        <div class="k-ico">🚄</div>
+        <div><span class="k-num" data-count="5.04" data-dec="2">0</span><span class="k-unit">万公里</span></div>
+        <div class="k-lbl">高铁营业里程</div>
+        <div class="k-note">世界第 1 · 超其他国家总和</div>
+      </div>
+      <div class="card kpi rv">
+        <div class="k-ico">📡</div>
+        <div><span class="k-num" data-count="483.8" data-dec="1">0</span><span class="k-unit">万个</span></div>
+        <div class="k-lbl">5G 基站总数</div>
+        <div class="k-note">每万人 34.4 个 · 县县通千兆</div>
+      </div>
+      <div class="card kpi rv">
+        <div class="k-ico">🧪</div>
+        <div><span class="k-num" data-count="39262" data-dec="0">0</span><span class="k-unit">亿元</span></div>
+        <div class="k-lbl">全社会研发经费投入</div>
+        <div class="k-note">同比 +8.1% · 强度 2.80%</div>
+      </div>
+      <div class="card kpi rv">
+        <div class="k-ico">🏆</div>
+        <div><span class="k-num" data-count="10" data-dec="0">0</span><span class="k-unit">位</span></div>
+        <div class="k-lbl">全球创新指数（GII）排名</div>
+        <div class="k-note">首次进入前十 · 累计提升 25 位</div>
+      </div>
+      <div class="card kpi rv">
+        <div class="k-ico">👩‍🔬</div>
+        <div><span class="k-num" data-count="795" data-dec="0">0</span><span class="k-unit">万人年</span></div>
+        <div class="k-lbl">研发人员全时当量</div>
+        <div class="k-note">连续 13 年世界第一</div>
+      </div>
+     </div>
+    </div>
+  </div>
+</section>
+
+<section id="space">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-no">01</div>
+      <div>
+        <div class="sec-en">Aerospace / Reaching for the Stars</div>
+        <h2 class="sec-title">航天 · <em>问天</em></h2>
+      </div>
+    </div>
+    <div class="sec-line rv"></div>
+    <p class="lead rv">
+      近十年，中国航天发射进入高频时代：年度发射次数从 2015 年的 <strong>19 次</strong> 攀升至 2025 年的 <strong>92 次</strong>，
+      十年增长近 4 倍，发射成功率长期稳定在 95% 左右。近地轨道常态化驻留、月球背面采样返回、火星“绕落巡”一步到位——
+      中国航天完成了从“跟跑”到“并跑”“部分领跑”的跨越。
+    </p >
+
+    <div class="split" style="margin-top:34px">
+      <div class="chart-box rv" style="grid-column:1/-1">
+        <div class="chart-t">
+          <h3>中国年度宇航发射次数与成功率（2015—2025）</h3>
+          <span>数据来源：中国航天科技活动蓝皮书 / 国家统计局</span>
+        </div>
+        <div class="chart" id="c-launch"></div>
+      </div>
+    </div>
+
+    <h3 class="rv" style="margin:52px 0 6px;font-size:20px;font-weight:800;letter-spacing:.03em">
+      里程碑时间轴 <span style="font-size:12px;color:var(--txt-3);font-family:var(--mono);font-weight:400;margin-left:10px">点击节点查看详情</span>
+    </h3>
+    <div class="tl-outer rv">
+      <div class="tl-track" id="tl-space"></div>
+      <div class="tl-panel" id="tlp-space"></div>
+    </div>
+  </div>
+</section>
+
+<section id="rail">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-no">02</div>
+      <div>
+        <div class="sec-en">High-Speed Rail / The Iron Silk Road</div>
+        <h2 class="sec-title">高铁 · <em>驰骋</em></h2>
+      </div>
+    </div>
+    <div class="sec-line rv"></div>
+    <p class="lead rv">
+              2008 年京津城际开通，中国高铁从零起步；2025 年 12 月 26 日西延高铁开通运营，
+      中国高铁营业里程正式突破 <strong>5 万公里</strong>，超过世界上其他国家高铁营业里程的总和，
+      覆盖全国 <strong>97%</strong> 的城区人口 50 万以上城市。同期，CR450 动车组实现运营时速 400 公里的跨越。
+    </p >
+
+    <div class="split" style="margin-top:34px">
+      <div class="chart-box rv">
+        <div class="chart-t">
+          <h3>高铁营业里程（万公里）</h3>
+          <span>2015—2025</span>
+        </div>
+        <div class="chart" id="c-rail"></div>
+      </div>
+      <div class="chart-box rv">
+        <div class="chart-t">
+          <h3>铁路旅客发送量（亿人次）</h3>
+          <span>2025 年达 42.55 亿人次</span>
+        </div>
+        <div class="chart" id="c-pax"></div>
+      </div>
+    </div>
+
+    <h3 class="rv" style="margin:52px 0 6px;font-size:20px;font-weight:800;letter-spacing:.03em">
+      速度刻度 <span style="font-size:12px;color:var(--txt-3);font-family:var(--mono);font-weight:400;margin-left:10px">点击节点查看详情</span>
+    </h3>
+    <div class="tl-outer rv">
+      <div class="tl-track" id="tl-rail"></div>
+      <div class="tl-panel" id="tlp-rail"></div>
+    </div>
+  </div>
+</section>
+
+<section id="digital">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-no">03</div>
+      <div>
+        <div class="sec-en">Digital China / Connected Infrastructure</div>
+        <h2 class="sec-title">数字中国 · <em>联接</em></h2>
+      </div>
+    </div>
+    <div class="sec-line rv"></div>
+    <p class="lead rv">
+      从 2019 年的 13 万个到 2025 年的 <strong>483.8 万个</strong>，中国 5G 基站数量六年增长超过 37 倍；
+      5G 移动电话用户达 <strong>12.04 亿户</strong>，5G 标准必要专利声明量占全球 <strong>42%</strong>。
+      研发投入同期从 2.2 万亿元跃升至 3.93 万亿元，投入强度首次超过 OECD 平均水平。
+    </p >
+
+    <div class="split" style="margin-top:34px">
+      <div class="chart-box rv">
+        <div class="chart-t">
+          <h3>5G 基站数量（万个）</h3>
+          <span>2019—2025</span>
+        </div>
+        <div class="chart" id="c-5g"></div>
+      </div>
+      <div class="chart-box rv">
+        <div class="chart-t">
+          <h3>研发经费投入与投入强度</h3>
+          <span>2018—2025</span>
+        </div>
+        <div class="chart" id="c-rd"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="frontier">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-no">04</div>
+      <div>
+        <div class="sec-en">Frontier / Beyond the Horizon</div>
+        <h2 class="sec-title">前沿 <em>刻度</em></h2>
+      </div>
+    </div>
+    <div class="sec-line rv"></div>
+    <p class="lead rv">
+      科技创新的边界不断外扩。以下是 2025 年《国民经济和社会发展统计公报》中记录的一批标志性突破——
+      它们分布在海洋、深空、量子、能源与智能的最前沿。
+    </p >
+
+    <div class="ach-grid" style="margin-top:34px">
+      <div class="card ach rv"><span class="a-badge">DEEP SPACE</span><h4>天问二号开启小行星采样之旅</h4><p>2025 年成功发射，奔赴近地小行星开展伴飞、附着与采样返回，中国深空探测从月球、火星延伸至小行星带。</p ></div>
+      <div class="card ach rv"><span class="a-badge">REUSABLE ROCKET</span><h4>可重复使用火箭加速突破</h4><p>朱雀三号、长征十二号甲首飞实现二子级成功入轨，商业航天发射全年达 50 次，占全部宇航发射的一半以上。</p ></div>
+      <div class="card ach rv"><span class="a-badge">CARRIER</span><h4>福建舰入列</h4><p>我国完全自主设计建造的首艘电磁弹射型航空母舰正式入列，标志着大型水面舰艇设计与综合电力技术体系化突破。</p ></div>
+      <div class="card ach rv"><span class="a-badge">QUANTUM</span><h4>“祖冲之三号”构建成功</h4><p>超导量子计算原型机“祖冲之三号”完成构建，在量子随机线路采样任务上保持国际领先的量子优越性。</p ></div>
+      <div class="card ach rv"><span class="a-badge">FUSION</span><h4>“人造太阳”亿度千秒</h4><p>全超导托卡马克 EAST 实现 1 亿摄氏度等离子体持续 1066 秒运行，创造世界纪录，向着聚变能源再进一步。</p ></div>
+      <div class="card ach rv"><span class="a-badge">NEUTRINO</span><h4>江门中微子实验正式运行</h4><p>江门中微子实验（JUNO）大科学装置投入运行，成为国际上首个建成的新一代大型中微子实验平台。</p ></div>
+      <div class="card ach rv"><span class="a-badge">AI</span><h4>国产大模型引发全球关注</h4><p>深度求索（DeepSeek）系列大模型以高性价比训练路径引发全球关注，推动国产人工智能进入开源前列。</p ></div>
+      <div class="card ach rv"><span class="a-badge">BCI</span><h4>首例侵入式脑机接口临床试验</h4><p>我国首例侵入式脑机接口临床试验成功开展，柔性电极与解码算法实现从实验室到临床的关键跨越。</p ></div>
+    </div>
+  </div>
+</section>
+
+<section id="outro">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-no">05</div>
+      <div>
+        <div class="sec-en">Outro / The Trajectory Continues</div>
+        <h2 class="sec-title">轨迹 <em>仍在延伸</em></h2>
+      </div>
+    </div>
+    <div class="sec-line rv"></div>
+
+    <div class="chart-box rv">
+      <div class="chart-t">
+        <h3>2025 年全球航天发射力量分布（次）</h3>
+        <span>中美两国合计占全球约 88%</span>
+      </div>
+      <div class="chart" id="c-global" style="height:340px"></div>
+    </div>
+
+    <div class="quote rv">
+      <p>数据不是冰冷的坐标，<br>而是一代人把“不可能”写进星图的方式。</p >
+      <div class="src">— 从东方红一号到星河问天，轨迹仍在延伸 —</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h5>数据来源</h5>
+        <ul>
+          <li>《中华人民共和国 2025 年国民经济和社会发展统计公报》，国家统计局</li>
+          <li>2025 年通信业统计公报，工业和信息化部</li>
+          <li>中国国家铁路集团有限公司 2026 年度工作会议数据</li>
+          <li>《中国航天科技活动蓝皮书》，中国航天科技集团</li>
+          <li>《全球创新指数 2025》，世界知识产权组织（WIPO）</li>
+        </ul>
+      </div>
+      <div>
+        <h5>说明</h5>
+        <p>
+          本页为数字媒体技术大赛参赛作品《星河轨迹：中国科技创新数据图谱》。
+          所有数据均来自上述公开权威来源，部分为初步核算数，统计口径以原始发布为准；
+          本页不包含中国香港特别行政区、中国澳门特别行政区和中国台湾省数据（除特别注明）。
+        </p >
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>星河轨迹 · A DATA ATLAS OF CHINA'S TECHNOLOGICAL INNOVATION</span>
+      <span>DATA VISUALIZATION / 2026</span>
+    </div>
+  </div>
+</footer>
+
+<button id="top" title="回到顶部">↑</button>
+
+<script src="data.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
