@@ -167,6 +167,21 @@ function buildTimeline(trackId, panelId, data){
   var panel = document.getElementById(panelId);
   if(!track || !panel) return;
   data.forEach(function(d, i){
+    var autoPlayBtn = document.getElementById('auto-play-btn');
+    if(autoPlayBtn){
+        var timer = null;
+        autoPlayBtn.addEventListener('click', function(){
+            if(timer){ clearInterval(timer); timer = null; autoPlayBtn.innerHTML = '▶ 自动播放'; return; }
+            autoPlayBtn.innerHTML = '⏸ 暂停播放';
+            var index = 0;
+            timer = setInterval(function(){
+                var nodes = track.querySelectorAll('.tl-node');
+                if(nodes.length === 0) return;
+                nodes[index].click(); 
+                index = (index + 1) % nodes.length; 
+            }, 2500);
+        });
+    }
     var n = document.createElement('div');
     n.className = 'tl-node' + (i===0?' on':'');
     n.innerHTML = '<div class="y">'+d.date+'</div><div class="n">'+d.short+'</div><div class="d">'+d.tag+'</div>';
@@ -204,7 +219,7 @@ buildTimeline('tl-rail','tlp-rail', railTL);
   }
 
   var AXIS = '#6e83a8', SPLIT = 'rgba(120,160,230,.13)', TXT = '#a9bcdc';
-  var baseGrid = {left:'3%', right:'4%', top:56, bottom:34, containLabel:true};
+  var baseGrid = {left:'3%', right:'4%', top:56, bottom:70, containLabel:true};
   var baseTip = {
     backgroundColor:'rgba(10,16,32,.94)',
     borderColor:'rgba(120,160,230,.32)',
@@ -237,15 +252,26 @@ buildTimeline('tl-rail','tlp-rail', railTL);
       {type:'value', name:'成功率 %', min:70, max:100, nameTextStyle:{color:AXIS,fontSize:11},
        splitLine:{show:false}, axisLabel:{color:AXIS,fontSize:11,formatter:'{value}%'}, axisLine:{show:false}, axisTick:{show:false}}
     ],
-    series:[
-      {name:'成功发射', type:'bar', stack:'a', barWidth:'46%', data:chartLaunchSucc, itemStyle:{color:grad('#5ee7ff','#2f6bff')}},
-      {name:'失利', type:'bar', stack:'a', barWidth:'46%', data:chartLaunchTotal.map(function(v,i){return v-chartLaunchSucc[i];}), itemStyle:{color:grad('#ff8b7a','#e8404f'), borderRadius:[5,5,0,0]}},
-      {name:'成功率', type:'line', yAxisIndex:1, smooth:true, symbol:'circle', symbolSize:7, data:chartLaunchRate,
-       lineStyle:{width:2.4, color:'#ffc64d', shadowColor:'rgba(255,198,77,.5)', shadowBlur:12},
-       itemStyle:{color:'#ffc64d', borderColor:'#0a1020', borderWidth:2},
-       label:{show:true, position:'top', color:'#ffc64d', fontSize:10.5, formatter:'{c}%'}}
-    ]
-  });
+    series:[{
+        name:'成功发射', type:'bar', stack:'a', barWidth:'46%', data:chartLaunchSucc, itemStyle:{color:grad('#5ee7ff','#2f6bff')}},
+        {name:'失利', type:'bar', stack:'a', barWidth:'46%', data:chartLaunchTotal.map(function(v,i){return v-chartLaunchSucc[i];}), itemStyle:{color:grad('#ff8b7a','#e8404f'), borderRadius:[5,5,0,0]}},
+        {name:'成功率', type:'line', yAxisIndex:1, smooth:true, symbol:'circle', symbolSize:7, data:chartLaunchRate,
+        lineStyle:{width:2.4, color:'#ffc64d', shadowColor:'rgba(255,198,77,.5)', shadowBlur:12},
+        itemStyle:{color:'#ffc64d', borderColor:'#0a1020', borderWidth:2},
+        label:{show:true, position:'top', color:'#ffc64d', fontSize:10.5, formatter:'{c}%'},
+        markPoint: {
+            data: [{
+                name: '历史新高',
+                coord: ['2025', 90], // X轴2025，Y轴90
+                value: '创历史新高 92次',
+                symbol: 'pin',
+                symbolSize: 45,
+                itemStyle: { color: 'rgba(53,224,240,0.8)', borderColor: '#35e0f0', borderWidth: 1 },
+                label: { show: true, formatter: '92次', color: '#fff', fontSize: 11, fontWeight: 'bold' }
+            }]
+        }
+    }]
+});
 
   // 2. 高铁里程
   mk('c-rail', {
@@ -258,6 +284,15 @@ buildTimeline('tl-rail','tlp-rail', railTL);
       itemStyle:{color:'#35e0f0', borderColor:'#05080f', borderWidth:2},
       areaStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(53,224,240,.5)'},{offset:.55,color:'rgba(74,134,255,.16)'},{offset:1,color:'rgba(74,134,255,0)'}])},
       label:{show:true, position:'top', color:'#9fe9ff', fontSize:10.5, formatter:'{c}'}
+    },
+    {
+        name: '全球（除中国外）',
+        type: 'line',
+        smooth: true,
+        data: chartRailKmGlobal,
+        lineStyle: { width: 2, color: '#8892b0', type: 'dashed' },
+        itemStyle: { color: '#8892b0' },
+        symbol: 'circle', symbolSize: 6
     }]
   });
 
@@ -270,7 +305,7 @@ buildTimeline('tl-rail','tlp-rail', railTL);
       type:'bar', data:chartPax, barWidth:'52%',
       itemStyle:{borderRadius:[5,5,0,0], color:function(p){ if(p.dataIndex === 5 || p.dataIndex === 7) return grad('#8fa3c8','#4b5f85'); return grad('#a98bff','#3f63d6'); }},
       label:{show:true, position:'top', color:'#c4b5ff', fontSize:10, formatter:function(p){ return p.dataIndex===5||p.dataIndex===7 ? p.value+'\n(疫后低谷)' : p.value; }},
-      markLine:{silent:true, symbol:'none', data:[{type:'average', name:'均值'}], lineStyle:{color:'rgba(255,198,77,.6)', type:'dashed'}, label:{color:'#ffc64d', fontSize:11, formatter:'均值 {c}'}}
+      markLine:{silent:true, symbol:'none', data:[{type:'average', name:'均值'}], lineStyle:{color:'rgba(255,198,77,.6)', type:'dashed'}, label:{color:'#ffc64d', fontSize:11, formatter:'均值 {c}',position: 'middle',distance: -12,backgroundColor: 'rgba(10,16,32,0.8)',padding: [3, 6],borderRadius: 4}}
     }]
   });
 
@@ -282,8 +317,14 @@ buildTimeline('tl-rail','tlp-rail', railTL);
     series:[{
       type:'bar', data:chart5GData, barWidth:'50%',
       itemStyle:{borderRadius:[6,6,0,0], color:grad('#3fd6a0','#1c7f8f')},
-      label:{show:true, position:'top', color:'#8fe8c6', fontSize:10.5},
-      markLine:{silent:true, symbol:'none', data:[{yAxis:483.8, label:{formatter:'2025 年 483.8 万个', color:'#3fd6a0', fontSize:11, position:'insideEndTop'}}], lineStyle:{color:'rgba(63,214,160,.5)', type:'dashed'}}
+      label:{show:true, position:'top', color:'#8fe8c6', fontSize:10.5,z:10},
+      markLine:{silent:true, symbol:'none', data:[{yAxis:483.8, label:{formatter:'2025 年 483.8 万个', color:'#3fd6a0', fontSize:11, position:'middle',distance:8}}], lineStyle:{color:'rgba(63,214,160,.5)', type:'dashed'}},
+      markPoint: {data: [{name: '5G破百万',coord: ['2021', 142.5],value: '2021年：5G基站破百万！',symbol: 'circle',symbolSize: 10,itemStyle: { color: '#ffc64d',  borderColor: '#04060f', borderWidth: 1},label: { show: true, formatter: '疫情下的科技突围', color: '#04060f',backgroundColor: '#ffc64d', padding: [4, 8], borderRadius: 4,fontSize: 10,position: 'top', distance: 14
+    }
+  }]
+}
+    },
+    {name: '全球（除中国外）',type: 'line',smooth: true,data: chart5GGlobal,z:1,lineStyle: { width: 2, color: '#8892b0', type: 'dashed' },itemStyle: { color: '#8892b0' },symbol: 'circle', symbolSize: 6
     }]
   });
 
@@ -317,4 +358,97 @@ buildTimeline('tl-rail','tlp-rail', railTL);
 
   setTimeout(function(){ charts.forEach(function(c){ c.resize(); }); }, 400);
   window.addEventListener('load', function(){ setTimeout(function(){ charts.forEach(function(c){ c.resize(); }); }, 300); });
+  /* ================= 多维度评估雷达图 ================= */
+mk('c-model-eval', {
+    tooltip: Object.assign({trigger:'item'}, baseTip),
+    radar: {
+        indicator: modelEvaluation.dimensions.map(function(name){ return {name: name, max: 100}; }),
+        shape: 'circle',
+        splitNumber: 4,
+        axisName: { color: '#a9bcdc', fontSize: 12 },
+        splitLine: { lineStyle: { color: 'rgba(120,160,230,.15)' } },
+        splitArea: { show: false },
+        axisLine: { lineStyle: { color: 'rgba(120,160,230,.2)' } }
+    },
+    series: [{
+        type: 'radar',
+        data: [
+            {
+                value: modelEvaluation.current,
+                name: '2025年 现状评估',
+                areaStyle: { color: 'rgba(53,224,240,.25)' },
+                lineStyle: { color: '#35e0f0', width: 2 },
+                itemStyle: { color: '#35e0f0' }
+            },
+            {
+                value: modelEvaluation.target,
+                name: '2035年 远景目标',
+                areaStyle: { color: 'rgba(255,198,77,.15)' },
+                lineStyle: { color: '#ffc64d', width: 2, type: 'dashed' },
+                itemStyle: { color: '#ffc64d' }
+            }
+        ]
+    }]
+});
+
+/* ================= 趋势预测推演图表 ================= */
+mk('c-prediction', {
+    grid: baseGrid,
+    tooltip: Object.assign({trigger:'axis'}, baseTip),
+    legend:{data:['历史数据','模型推演预测'], right:10, top:6, textStyle:{color:TXT,fontSize:12}},
+    xAxis:{type:'category', data:predictionYears, axisLine:{lineStyle:{color:'rgba(120,160,230,.25)'}}, axisTick:{show:false}, axisLabel:{color:AXIS,fontSize:12}},
+    yAxis:{type:'value', name:'发射次数', splitLine:{lineStyle:{color:SPLIT}}, axisLabel:{color:AXIS,fontSize:11}, axisLine:{show:false}, axisTick:{show:false}},
+    series:[
+        {
+            name: '历史数据',
+            type: 'bar',
+            barWidth: '30%',
+            data: [92, null, null, null, null, null], 
+            itemStyle: { borderRadius: [6,6,0,0], color: grad('#5ee7ff','#2f6fbf') }
+        },
+        {
+            name: '模型推演预测',
+            type: 'line',
+            smooth: true,
+            symbol: 'emptyCircle',
+            symbolSize: 8,
+            data: [null, 105, 118, 132, 148, 165], 
+            lineStyle: { width: 3, color: '#ffc64d', type: 'dashed', shadowColor: 'rgba(255,198,77,.5)', shadowBlur: 12 },
+            itemStyle: { color: '#ffc64d', borderWidth: 2 },
+            areaStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(255,198,77,.3)'},{offset:1,color:'rgba(255,198,77,0)'}]) },
+            label: { show: true, position: 'top', color: '#ffc64d', fontSize: 11 }
+        }
+    ]
+});
 })();
+/* ================= 打字机效果 ================= */
+(function(){
+  var el = document.getElementById('hero-typing');
+  if(!el) return;
+  var text = el.getAttribute('data-text') || '';
+  var i = 0;
+  function type() {
+    if (i <= text.length) {
+      el.innerHTML = text.slice(0, i);
+      i++;
+      setTimeout(type, 45); 
+    }
+  }
+  setTimeout(type, 800); 
+})();
+/* ================= 卡片鼠标跟随效果 ================= */
+document.querySelectorAll('.card').forEach(function(card){
+  card.addEventListener('mousemove', function(e){
+    var rect = card.getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    var y = e.clientY - rect.top;
+    var centerX = rect.width / 2;
+    var centerY = rect.height / 2;
+    var rotateX = (y - centerY) / 20;
+    var rotateY = (centerX - x) / 20;
+    card.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale(1.02)';
+  });
+  card.addEventListener('mouseleave', function(){
+    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+  });
+});

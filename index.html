@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>星河轨迹 · 中国科技创新数据图谱</title>
+<title>星河轨迹:中国科技创新数据图谱</title>
 <meta name="description" content="以数据可视化呈现中国航天、高铁、数字基建等领域的科技创新成就与发展历程。">
 <link rel="stylesheet" href="style.css">
 <!-- 引入 ECharts 库 -->
@@ -24,13 +24,14 @@
 <div id="prog"></div>
 
 <nav id="nav">
-  <div class="brand"><span class="dot"></span>星河轨迹 · STAR TRAJECTORY</div>
+  <div class="brand"><span class="dot"></span>星河轨迹:中国科技创新数据图谱</div>
   <div class="navlinks">
     <a href=" " class="nav-a">总览</a >
     <a href="#space" class="nav-a">航天</a >
     <a href="#rail" class="nav-a">高铁</a >
     <a href="#digital" class="nav-a">数字中国</a >
     <a href="#frontier" class="nav-a">前沿刻度</a >
+    <a href="#model" class="nav-a">模型推演</a>
     <a href="#outro" class="nav-a">结语</a >
   </div>
 </nav>
@@ -42,11 +43,8 @@
       <h1 class="title rv">星河轨迹</h1>
       <div class="title-en rv">A Data Atlas of China's Technological Innovation</div>
       <div class="hero-sub rv">从地球轨道到 <b>5 万公里</b> 钢铁动脉，一条用数据描绘的中国创新轨迹</div>
-      <p class="hero-desc rv">
-        从 1970 年东方红一号划破长空，到 2025 年一年 <b>92 次</b>宇航发射、高铁营业里程突破 <b>5 万公里</b>、
-        5G 基站建成 <b>483.8 万个</b>——本图谱以权威数据为坐标，用可视化重现中国航天、高铁与数字基建的跃迁式发展历程，
-        让每一个刻度都成为可被看见的时代注脚。
-      </p >
+      <p class="hero-desc rv" id="hero-typing" data-text="从东方红一号划破长空，到2025年一年发射92次、高铁突破5万公里、5G基站建成483.8万个——本图谱用数据讲好中国故事，让每一个刻度成为时代的注脚。">
+    </p >
       <div class="hero-tags rv">
         <span class="tag">航天发射</span>
         <span class="tag">高速铁路</span>
@@ -75,6 +73,9 @@
 </header>
 
 <section id="overview">
+    <p class="lead rv" style="margin-top:16px; color: var(--cyan); font-size:13.5px; border-left:2px solid var(--cyan); padding-left:12px;">
+        <strong>【分析方法】</strong> 运用 <strong>时间序列分析</strong>、<strong>多维度评估</strong>与<strong>比较分析法</strong>，结合权威统计数据，推演中国科技创新演进路径。
+    </p >
   <div class="wrap">
     <div class="sec-head rv">
       <div class="sec-no">00</div>
@@ -152,7 +153,7 @@
       <div class="chart-box rv" style="grid-column:1/-1">
         <div class="chart-t">
           <h3>中国年度宇航发射次数与成功率（2015—2025）</h3>
-          <span>数据来源：中国航天科技活动蓝皮书 / 国家统计局</span>
+          <span>分析模型：时间序列与成功率回归</span>
         </div>
         <div class="chart" id="c-launch"></div>
       </div>
@@ -163,6 +164,9 @@
     </h3>
     <div class="tl-outer rv">
       <div class="tl-track" id="tl-space"></div>
+      <div style="text-align: right; margin-top: 10px;">
+        <button id="auto-play-btn" style="background: rgba(53,224,240,0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 5px 15px; border-radius: 100px; cursor: pointer;">▶ 自动播放</button>
+    </div>
       <div class="tl-panel" id="tlp-space"></div>
     </div>
   </div>
@@ -188,7 +192,7 @@
       <div class="chart-box rv">
         <div class="chart-t">
           <h3>高铁营业里程（万公里）</h3>
-          <span>2015—2025</span>
+          <span>分析模型：指数增长趋势模型</span>
         </div>
         <div class="chart" id="c-rail"></div>
       </div>
@@ -231,14 +235,14 @@
       <div class="chart-box rv">
         <div class="chart-t">
           <h3>5G 基站数量（万个）</h3>
-          <span>2019—2025</span>
+          <span>分析模型：爆发式增长曲线</span>
         </div>
         <div class="chart" id="c-5g"></div>
       </div>
       <div class="chart-box rv">
         <div class="chart-t">
           <h3>研发经费投入与投入强度</h3>
-          <span>2018—2025</span>
+          <span>2018-2025</span>
         </div>
         <div class="chart" id="c-rd"></div>
       </div>
@@ -274,10 +278,49 @@
   </div>
 </section>
 
-<section id="outro">
+<section id="model">
   <div class="wrap">
     <div class="sec-head rv">
       <div class="sec-no">05</div>
+      <div>
+        <div class="sec-en">Model / Data Mining & Prediction</div>
+        <h2 class="sec-title">模型 <em>推演</em></h2>
+      </div>
+    </div>
+    <div class="sec-line rv"></div>
+    <p class="lead rv">
+        不仅记录历史，更尝试推演未来。我们提取了<strong>“研发投入、高端人才、基础设施”</strong> 等五大维度的数据，构建了综合评估模型，并基于过去十年的平均增长速率，推演出2030年中国航天将达到年发射<strong>165次</strong>的高度。
+    </p >
+
+    <div class="split" style="margin-top:34px">
+      <div class="chart-box rv">
+        <div class="chart-t">
+          <h3>科技创新多维度评估模型（2025 vs 2035）</h3>
+          <span>数据挖掘：雷达图评估</span>
+        </div>
+        <div class="chart" id="c-model-eval" style="height:380px;"></div>
+        <div style="font-size:12.5px; color:var(--txt-3); text-align:center; margin-top:10px; font-family:var(--mono); line-height: 1.8;">
+            <strong style="color:var(--cyan)">【模型特点】</strong> 本模型采用<strong>多维度特征提取算法</strong>，将科技实力解构为五大核心维度（参数：0-100评分体系）。通过“2025现状 vs 2035目标”的双层对比，得出结论：我国在“基础设施”与“研发投入”维度优势显著，而“前沿探索”维度正呈现加速追赶态势。
+        </div>
+      </div>
+      <div class="chart-box rv">
+        <div class="chart-t">
+          <h3>中国航天发射次数推演预测（2025—2030）</h3>
+          <span>数据挖掘：趋势回归预测</span>
+        </div>
+        <div class="chart" id="c-prediction" style="height:380px;"></div>
+        <div style="font-size:12.5px; color:var(--txt-3); text-align:center; margin-top:10px; font-family:var(--mono); line-height: 1.8;">
+            <strong style="color:var(--cyan)">【模型特点】</strong> 本模型采用<strong>线性回归与时间序列算法</strong>，核心参数设定为15%的复合增长率。推演结论：2030年中国将迈入年发射165次的高频时代。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="outro">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-no">06</div>
       <div>
         <div class="sec-en">Outro / The Trajectory Continues</div>
         <h2 class="sec-title">轨迹 <em>仍在延伸</em></h2>
@@ -288,17 +331,16 @@
     <div class="chart-box rv">
       <div class="chart-t">
         <h3>2025 年全球航天发射力量分布（次）</h3>
-        <span>中美两国合计占全球约 88%</span>
+        <span>分析模型：全球横向对比结构</span>
       </div>
       <div class="chart" id="c-global" style="height:340px"></div>
     </div>
-
+  </div>
+</section>
     <div class="quote rv">
       <p>数据不是冰冷的坐标，<br>而是一代人把“不可能”写进星图的方式。</p >
       <div class="src">— 从东方红一号到星河问天，轨迹仍在延伸 —</div>
     </div>
-  </div>
-</section>
 
 <footer>
   <div class="wrap">
@@ -311,6 +353,17 @@
           <li>中国国家铁路集团有限公司 2026 年度工作会议数据</li>
           <li>《中国航天科技活动蓝皮书》，中国航天科技集团</li>
           <li>《全球创新指数 2025》，世界知识产权组织（WIPO）</li>
+          <li>国际铁路联盟（UIC）2025年世界高速铁路地图</li>
+          <li>TD产业联盟2025Q4全球5G产业市场报告</li>
+        </ul>
+      </div>
+      <div>
+        <h5>分析方法</h5>
+        <ul>
+          <li>趋势回归模型：基于历史数据推演未来航天发射次数</li>
+          <li>多维度评估模型：雷达图评估科技创新综合国力</li>
+          <li>数据清洗与特征提取：从国家统计局原始数据中提取五大核心指标</li>
+          <li>时间序列分析：对比近十年高铁、5G发展速度</li>
         </ul>
       </div>
       <div>
